@@ -1,61 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { FcLike, FcComments, FcExpand } from "react-icons/fc";
+import axios from "axios";
+import { format } from "timeago.js";
+import { Link } from "react-router-dom";
+import avatar_male from "../assets/avatar_male.png";
 
-function Post() {
+function Post({ post }) {
+  const [like, setLike] = useState(post.likes.length);
+  const [isLiked, setIsLiked] = useState(false);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await axios.get(`/users?userId=${post.userId}`);
+      setUser(res.data);
+    };
+    fetchUser();
+  }, [post.userId]);
+
+  const likeHandler = () => {
+    setLike(isLiked ? like - 1 : like + 1);
+    setIsLiked(!isLiked);
+  };
   return (
     <div>
-      <div className="ml-11 px-4 py-8 max-w-3xl my-8">
+      <div className="ml-11 px-4 py-8 max-w-3xl my-4">
         <div className="bg-white shadow-2xl rounded-lg mb-6 tracking-wide">
           <div className="md:flex-shrink-0">
             <img
-              src="https://ik.imagekit.io/q5edmtudmz/post1_fOFO9VDzENE.jpg"
-              alt="mountains"
-              className="w-full h-64 rounded-lg rounded-b-none"
+              src={post.img}
+              className="w-full h-96 rounded-lg rounded-b-none"
+              alt="post"
             />
           </div>
 
-          <div className="px-4 py-2 mt-2">
-            <h2 className="font-bold text-2xl text-gray-800 tracking-normal">
-              My Amaizing Journey to the Mountains.
-            </h2>
-            <p className="text-sm text-gray-700 px-2 mr-1">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
-              reiciendis ad architecto at aut placeat quia, minus dolor
-              praesentium officia maxime deserunt porro amet ab debitis deleniti
-              modi soluta similique...
-            </p>
-            <div className="flex items-center justify-between mt-2 mx-6">
-              <a href="#" className="text-blue-500 text-xs -ml-3 ">
-                Show More
-              </a>
-              <a href="#" className="flex text-gray-700">
-                <svg
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className="w-6 h-6 text-blue-500"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                  />
-                </svg>
-                5
-              </a>
-            </div>
-            <div className="author flex items-center -ml-3 my-3">
-              <div className="user-logo">
+          <div className="author flex items-center -ml-3 my-3">
+            <div className="user-logo">
+              <Link to={`profile/${user.username}`}>
                 <img
                   className="w-12 h-12 object-cover rounded-full mx-4  shadow"
-                  src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=731&q=80"
+                  src={user.profilePicture || avatar_male}
                   alt="avatar"
                 />
+              </Link>
+            </div>
+            <h2 className="text-sm text-red-400">
+              <Link to={`profile/${user.username}`}>{user.username}</Link>
+              <span className="text-gray-400 ml-4">
+                {format(post.createdAt)}
+              </span>
+            </h2>
+          </div>
+
+          <div className="px-4 py-2 mt-2">
+            <h2 className="font-medium text-lg text-gray-500 tracking-normal">
+              {post.desc}{" "}
+            </h2>
+            <div className="flex items-center justify-between mt-2 mx-6">
+              <span className="text-gray-500 text-xs -ml-6">
+                <FcExpand />
+              </span>
+              <div className="flex">
+                <span
+                  className="flex text-red-400 mr-2.5 cursor-pointer"
+                  onClick={likeHandler}
+                >
+                  <FcLike className="mt-1" />
+                  {like}
+                </span>
+                <span className="flex text-green-400 cursor-pointer">
+                  <FcComments className="mt-1" />
+                  {post.comment}
+                </span>
               </div>
-              <h2 className="text-sm text-gray-900">
-                <a href="#">By Mohammed Ibrahim</a>{" "}
-                <span className="text-gray-600">21 SEP 2015.</span>
-              </h2>
             </div>
           </div>
         </div>
