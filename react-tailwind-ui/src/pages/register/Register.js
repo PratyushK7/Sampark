@@ -1,7 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useRef } from "react";
+import { Link, useHistory } from "react-router-dom";
 
 function Register() {
+  const username = useRef();
+  const email = useRef();
+  const password = useRef();
+  const passwordAgain = useRef();
+  const history = useHistory();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password.current.value !== passwordAgain.current.value) {
+      password.current.setCustomValidity("Passwords don't match");
+    } else {
+      const user = {
+        username: username.current.value,
+        password: password.current.value,
+        email: email.current.value,
+      };
+
+      try {
+        await axios.post("/auth/register", user);
+        history.push("/login");
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
   return (
     <div className="container p-16 py-32  ">
       <section className="grid grid-cols-1 gap-0 lg:grid-cols-12">
@@ -14,9 +40,9 @@ function Register() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               className="w-10 h-10 text-white p-2 bg-red-500 rounded-full"
               viewBox="0 0 24 24"
             >
@@ -29,12 +55,17 @@ function Register() {
           <h1 className="mt-6 mb-4 text-xl font-light text-left text-gray-600">
             Register Account
           </h1>
-          <form className="pb-1 space-y-4">
+          <form className="pb-1 space-y-4" onSubmit={handleSubmit}>
             <label className="block">
               <span className="block mb-2 text-xs font-medium text-gray-700 mt-4">
                 Username
               </span>
-              <input className="form-input" placeholder="@Kaladin" required />
+              <input
+                className="form-input"
+                placeholder="@Kaladin"
+                ref={username}
+                required
+              />
             </label>
             <label className="block">
               <span className="block mb-2 text-xs font-medium text-gray-700">
@@ -44,7 +75,8 @@ function Register() {
                 className="form-input"
                 type="email"
                 placeholder="Ex. kaladin@storms.com"
-                inputmode="email"
+                inputMode="email"
+                ref={email}
                 required
               />
             </label>
@@ -56,11 +88,27 @@ function Register() {
                 className="form-input"
                 type="password"
                 placeholder="••••••••"
+                ref={password}
+                required
+              />
+            </label>
+            <label className="block">
+              <span className="block mb-2 text-xs font-medium text-gray-700 mt-4">
+                Password Again
+              </span>
+              <input
+                className="form-input"
+                type="password"
+                placeholder="••••••••"
+                ref={passwordAgain}
                 required
               />
             </label>
             <div className="flex items-center justify-between">
-              <button class="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-3 rounded-full -ml-2">
+              <button
+                className="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-3 rounded-full -ml-2"
+                type="submit"
+              >
                 Register
               </button>
             </div>
@@ -72,10 +120,6 @@ function Register() {
                 Login
               </Link>
             </p>
-
-            <a href="/" className="block text-xs text-red-500 hover:text-black">
-              Privacy & Terms
-            </a>
           </div>
         </div>
         <div className="col-span-1 lg:col-span-8">

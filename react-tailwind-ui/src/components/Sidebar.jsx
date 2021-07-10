@@ -1,4 +1,5 @@
 import React from "react";
+import Logout from "../components/Logout.jsx";
 
 function Sidebar() {
   return (
@@ -61,11 +62,12 @@ function Sidebar() {
               <span className="text-sm font-medium">Shopping</span>
             </li>
 
-            <li className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
-              <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
+            <li className="flex flex-row items-center h-12 -mt-1 transform hover:translate-x-2 transition-transform ease-in duration-200 text-red-500 hover:text-gray-800">
+              <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-red-500">
                 <i className="bx bx-log-out"></i>
               </span>
-              <span className="text-sm font-medium">Logout</span>
+
+              <Logout />
             </li>
 
             <div className="divide-y-2 divide-gray-200 divide-solid">

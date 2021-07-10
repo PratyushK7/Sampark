@@ -2,6 +2,7 @@ import React, { useContext, useRef } from "react";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import { CircularProgress } from "@material-ui/core";
 
 function Login() {
   const email = useRef();
@@ -15,8 +16,6 @@ function Login() {
       dispatch
     );
   };
-
-  console.log(user);
 
   return (
     <div className="container p-16 py-32  ">
@@ -76,8 +75,13 @@ function Login() {
                   Remember me
                 </span>
               </label>
+
               <button className="bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-3 rounded-full">
-                Login
+                {isFetching ? (
+                  <CircularProgress color="orange" size="15px" />
+                ) : (
+                  "Login"
+                )}
               </button>
             </div>
           </form>

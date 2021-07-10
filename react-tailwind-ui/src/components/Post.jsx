@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FcLike, FcComments, FcExpand } from "react-icons/fc";
 import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import avatar_male from "../assets/avatar_male.png";
+import { AuthContext } from "../context/AuthContext";
 
 function Post({ post }) {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState({});
+  const { user: currentUser } = useContext(AuthContext);
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  useEffect(() => {
+    setIsLiked(post.likes.includes(currentUser._id));
+  }, [currentUser._id, post.likes]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -19,6 +26,9 @@ function Post({ post }) {
   }, [post.userId]);
 
   const likeHandler = () => {
+    try {
+      axios.put("/posts/" + post._id + "/like", { userId: currentUser._id });
+    } catch (err) {}
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
@@ -28,7 +38,7 @@ function Post({ post }) {
         <div className="bg-white shadow-2xl rounded-lg mb-6 tracking-wide">
           <div className="md:flex-shrink-0">
             <img
-              src={post.img}
+              src={PF + post.img}
               className="w-full h-96 rounded-lg rounded-b-none"
               alt="post"
             />
@@ -54,7 +64,7 @@ function Post({ post }) {
 
           <div className="px-4 py-2 mt-2">
             <h2 className="font-medium text-lg text-gray-500 tracking-normal">
-              {post.desc}{" "}
+              {post.desc}
             </h2>
             <div className="flex items-center justify-between mt-2 mx-6">
               <span className="text-gray-500 text-xs -ml-6">

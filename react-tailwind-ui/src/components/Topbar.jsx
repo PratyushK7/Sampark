@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { GrNotification, GrChat, GrUserAdd } from "react-icons/gr";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import noAvatar from "../assets/noAvatar.png";
 
 function Topbar() {
+  const { user } = useContext(AuthContext);
+
   return (
     <div>
       <header className="text-gray-600 body-font">
@@ -46,11 +50,13 @@ function Topbar() {
 
           <div className="flex space-x-2">
             <div className="relative w-10 h-10">
-              <img
-                className="rounded-full border border-gray-100 shadow-sm"
-                src="https://randomuser.me/api/portraits/lego/2.jpg"
-                alt="user"
-              />
+              <Link to={`/profile/${user.username}`}>
+                <img
+                  className="rounded-full border border-gray-100 shadow-sm"
+                  src={user.profilePicture ? user.profilePicture : noAvatar}
+                  alt="user"
+                />
+              </Link>
               <div className="absolute top-0 right-0 h-3 w-3 my-1 border-2 border-white rounded-full bg-green-400 z-2"></div>
             </div>
           </div>

@@ -1,6 +1,8 @@
 import React from "react";
 
 function ProfileCard({ user }) {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
   return (
     <div>
       <main className="profile-page">
@@ -46,7 +48,13 @@ function ProfileCard({ user }) {
                     <div className="relative">
                       <img
                         alt="..."
-                        src={user.profilePicture}
+                        src={
+                          user.profilePicture
+                            ? user.profilePicture
+                            : user.gender === 1
+                            ? PF + "Male_2.png"
+                            : PF + "Female.png"
+                        }
                         className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
                         style={{ maxWidth: "150px" }}
                       />
@@ -59,7 +67,7 @@ function ProfileCard({ user }) {
                         type="button"
                         style={{ transition: "all .15s ease" }}
                       >
-                        Connect
+                        Follow
                       </button>
                     </div>
                   </div>
@@ -87,18 +95,20 @@ function ProfileCard({ user }) {
                   </div>
                 </div>
                 <div className="text-center mt-16 ml-8">
-                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
+                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 mb-2 uppercase">
                     {user.username}
                   </h3>
                   <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
                     {user.city || "Somewhere on Earth🌍"}
                   </div>
-                  <div className="mb-2 text-gray-700 mt-10">
-                    <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
-                    {user.from}
-                  </div>
-                  <div className="mb-2 text-gray-700 mt-10">
+                  {user.from ? (
+                    <div className="mb-2 text-gray-700 mt-10">
+                      <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
+                      {user.from}
+                    </div>
+                  ) : null}
+                  <div className="mb-2 text-red-500 mt-10">
                     <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
                     {user.gender === 1 ? "Male" : "Female"}
                   </div>
@@ -111,11 +121,9 @@ function ProfileCard({ user }) {
                   <div className="flex flex-wrap justify-center">
                     <div className="w-full lg:w-9/12 px-4">
                       <p className="mb-4 text-lg leading-relaxed text-gray-800">
-                        An artist of considerable range, Jenna the name taken by
-                        Melbourne-raised, Brooklyn-based Nick Murphy writes,
-                        performs and records all of his own music, giving it a
-                        warm, intimate feel with a solid groove structure. An
-                        artist of considerable range.
+                        {user.desc
+                          ? user.desc
+                          : "An artist of considerable range, Jenna the name taken by Melbourne-raised, Brooklyn-based Nick Murphy write performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure. An artist of considerable range."}
                       </p>
                       <a
                         href="#pablo"
